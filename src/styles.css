@@ -1,0 +1,23 @@
+:root {
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #122033;
+  --muted: #5b6b7c;
+  --border: #d7e0ea;
+  --accent: #0f6c6c;
+  font-family: Inter, Segoe UI, system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top right, rgba(15, 108, 108, 0.12), transparent 28%),
+    var(--bg);
+}

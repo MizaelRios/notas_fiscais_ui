@@ -1,0 +1,111 @@
+<section class="layout">
+  <header class="topo">
+    <div>
+      <p class="selo">Módulo - Fiscal</p>
+      <h1>Notas fiscais</h1>
+      <p class="subtitulo">Cadastro e consulta de Notas fiscais em memória.</p>
+    </div>
+  </header>
+
+  <div class="grade">
+    <form class="cartao" [formGroup]="formulario" (ngSubmit)="cadastrar()" novalidate>
+      <h2>Nova nota</h2>
+
+      @if (erroApi()) {
+        <p class="alerta erro" role="alert">{{ erroApi() }}</p>
+      }
+      @if (sucesso()) {
+        <p class="alerta ok" role="status">{{ sucesso() }}</p>
+      }
+
+      <label>
+        Número da nota
+        <input formControlName="numero" type="text" autocomplete="off" />
+        @if (campoInvalido('numero')) {
+          <span class="hint">Informe o número da nota.</span>
+        }
+      </label>
+
+      <label>
+        Cliente
+        <input formControlName="cliente" type="text" autocomplete="off" />
+        @if (campoInvalido('cliente')) {
+          <span class="hint">Informe o cliente.</span>
+        }
+      </label>
+
+      <label>
+        Valor
+        <input formControlName="valor" type="number" min="0.01" step="0.01" />
+        @if (campoInvalido('valor')) {
+          <span class="hint">Informe um valor maior que zero.</span>
+        }
+      </label>
+
+      <label>
+        Data de emissão
+        <input formControlName="dataEmissao" type="date" />
+        @if (campoInvalido('dataEmissao')) {
+          <span class="hint">Informe a data de emissão.</span>
+        }
+      </label>
+
+      <button type="submit" [disabled]="enviando()">
+        {{ enviando() ? 'Salvando...' : 'Cadastrar nota' }}
+      </button>
+    </form>
+
+    <section class="cartao">
+      <div class="lista-topo">
+        <h2>Notas cadastradas</h2>
+        <label class="filtro">
+          Buscar cliente
+          <input
+            type="search"
+            [value]="filtroCliente()"
+            (input)="atualizarFiltro($any($event.target).value)"
+            placeholder="Filtrar por nome"
+          />
+        </label>
+      </div>
+
+      @if (carregando()) {
+        <p class="vazio">Carregando...</p>
+      } @else if (notasExibidas().length === 0) {
+        <p class="vazio">Nenhuma nota encontrada.</p>
+      } @else {
+        <div class="tabela-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>
+                  <button type="button" class="ordenar" (click)="alternarOrdenacaoValor()">
+                    Valor
+                    @if (ordenacaoValor() === 'asc') { <span>↑</span> }
+                    @else if (ordenacaoValor() === 'desc') { <span>↓</span> }
+                    @else { <span class="neutro">↕</span> }
+                  </button>
+                </th>
+                <th>Emissão</th>
+                <th>Cadastro</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (nota of notasExibidas(); track nota.id) {
+                <tr>
+                  <td>{{ nota.numero }}</td>
+                  <td>{{ nota.cliente }}</td>
+                  <td>{{ nota.valorFormatado }}</td>
+                  <td>{{ nota.dataEmissao | date: 'dd/MM/yyyy' }}</td>
+                  <td>{{ nota.dataCadastro | date: 'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </div>
+</section>
